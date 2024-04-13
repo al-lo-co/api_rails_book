@@ -1,11 +1,10 @@
 class Api::V1::TokensController < ApplicationController
   def create
     user = User.find_by(email: user_params[:email])
-    binding.pry
     if user.authenticate(user_params[:password])
       render json: {
-        token: JWT.encode(user_id: user.id),
-        email: user_params[:email]
+        token: JWT.encode({ user_id: user.id }, user_params[:password]),
+        email: user.email
       }
     else
       head :unauthorized
