@@ -3,7 +3,7 @@ class Api::V1::TokensController < ApplicationController
     user = User.find_by(email: user_params[:email])
     if user.authenticate(user_params[:password])
       render json: {
-        token: JWT.encode({ user_id: user.id }, user_params[:password]),
+        token: JsonWebToken.encode(user_id: user.id),
         email: user.email
       }
     else
