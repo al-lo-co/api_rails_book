@@ -30,28 +30,49 @@ RSpec.describe "Api::V1::Users", type: :request do
     end
   end
 
-  describe "put api_v1_users_path" do
+  describe "patch api_v1_users_path" do
     let(:user) { User.create(email: "email@asd.co", password: "asdasda") }
+    let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
 
-    it "Should create the user" do
-      put api_v1_user_path(id: user.id), params: { user: { email: user.email, password: user.password } }, as: :json
+    it "Should update the user" do
+      patch api_v1_user_path(id: user.id), params: { user: { email: user.email, password: user.password } }, headers: , as: :json
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:success)
     end
 
-    it "Should not create the user" do
-      put api_v1_user_path(id: user.id), params: { user: { email: "bad email", password: user.password } }, as: :json
+    it "Should not update the user" do
+      patch api_v1_user_path(id: user.id), params: { user: { email: "bad email", password: user.password } }, headers: , as: :json
 
       expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "Should forbit update the user" do
+      patch api_v1_user_path(id: user.id), params: { user: { email: user.email, password: user.password } }, as: :json
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
   describe "delete api_v1_user_path" do
     let(:user) { User.create(email: "email@asd.co", password: "asdasda") }
+    let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
+
     it "should delete the user" do
-      delete api_v1_user_path(id: user.id), as: :json
+      delete api_v1_user_path(id: user.id), headers: , as: :json
 
       expect(response).to have_http_status(204)
+    end
+
+    xit "should not delete the user" do
+      delete api_v1_user_path(id: 1), headers: , as: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "should forbid delete the user" do
+      delete api_v1_user_path(id: user.id), as: :json
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end

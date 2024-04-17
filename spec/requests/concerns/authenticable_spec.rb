@@ -10,6 +10,12 @@ RSpec.describe "Concers::Authenticable" do
     
     expect(authentication.current_user.id).to be(user.id)
   end
+
+  it "should not get user from empty Authorization token" do
+    authentication.request.headers["Authorization"] = nil
+
+    expect(authentication.current_user).to be_nil
+  end
 end
 
 class MockController

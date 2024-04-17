@@ -1,5 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: %i[ show update destroy ]
+  before_action :check_owner, only: %i[ update destroy ]
 
   def index
     render json: User.all
@@ -28,12 +29,20 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def destroy
-    @user.destroy
+    if @user && @user.destroy
+      @status = 204
+    else
+      @status = :unprocessable_entity
+    end
 
-    head 204
+    head @status
   end
 
   private
+
+  def check_owner
+    head :forbidden unless @user.id == current_user&.id
+  end
 
   def set_user
     @user ||= User.find(params[:id])
