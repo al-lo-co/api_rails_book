@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Products", type: :request do
-  describe "GET /show" do
+  describe "GET /api/v1/product/:id" do
     let!(:product) { create(:product) }
     let(:params) { { id: product.id } }
     let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
@@ -13,7 +13,7 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
   end
 
-  describe "GET /index" do
+  describe "GET /api/v1/products" do
     let(:products) { create_list(:product, 5) }
 
     it "returns http success" do
@@ -23,7 +23,7 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
   end
 
-  describe "POST /create" do
+  describe "POST api/v1/products" do
     let(:user) { create(:user) }
     let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
     let(:params) { { product: { title: Faker::Name, price: 0.1, published: true } } }
@@ -31,6 +31,30 @@ RSpec.describe "Api::V1::Products", type: :request do
       post api_v1_products_path, params: , headers: , as: :json
 
       expect(response).to have_http_status(:created)
+    end
+
+    it "returns http status forbidden" do
+      post api_v1_products_path, params: , as: :json
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe "Patch api/v1/product" do
+    let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
+    let(:product) { create(:product) }
+    let(:user) { product.user }
+    let(:params) { { product: { title: Faker::Name } } }
+    it "returns http status created" do
+      patch api_v1_product_path(id: product.id), params: , headers: , as: :json
+
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns http status forbidden" do
+      patch api_v1_product_path(id: product.id), params: , as: :json
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end
