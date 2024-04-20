@@ -41,9 +41,9 @@ RSpec.describe "Api::V1::Products", type: :request do
   end
 
   describe "Patch api/v1/product" do
-    let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
     let(:product) { create(:product) }
     let(:user) { product.user }
+    let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
     let(:params) { { product: { title: Faker::Name } } }
     it "returns http status created" do
       patch api_v1_product_path(id: product.id), params: , headers: , as: :json
@@ -53,6 +53,24 @@ RSpec.describe "Api::V1::Products", type: :request do
 
     it "returns http status forbidden" do
       patch api_v1_product_path(id: product.id), params: , as: :json
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe "Delete api/v1/product" do
+    let(:product) { create(:product) }
+    let(:user) { product.user }
+    let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
+    let(:params) { { product: { title: Faker::Name } } }
+    it "returns http status " do
+      delete api_v1_product_path(id: product.id), params: , headers: , as: :json
+
+      expect(response).to have_http_status(204)
+    end
+
+    it "returns http status forbidden" do
+      delete api_v1_product_path(id: product.id), params: , as: :json
 
       expect(response).to have_http_status(:forbidden)
     end
