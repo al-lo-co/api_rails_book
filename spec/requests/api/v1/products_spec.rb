@@ -22,4 +22,15 @@ RSpec.describe "Api::V1::Products", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe "POST /create" do
+    let(:user) { create(:user) }
+    let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
+    let(:params) { { product: { title: Faker::Name, price: 0.1, published: true } } }
+    it "returns http status created" do
+      post api_v1_products_path, params: , headers: , as: :json
+
+      expect(response).to have_http_status(:created)
+    end
+  end
 end
