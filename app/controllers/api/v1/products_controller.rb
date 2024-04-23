@@ -8,13 +8,13 @@ class Api::V1::ProductsController < ApplicationController
   end
 
   def show
-    render json: @product 
+    render json: ProductBlueprint.render(@product, view: :extended) 
   end
 
   def create
     product = current_user.products.build(product_params)
     if product.save
-      render json: product, status: :created
+      render json: ProductBlueprint.render(product, view: :extended), status: :created
     else
       render json: { errors: product.errors }, status: :unprocessable_entity
     end
@@ -22,7 +22,7 @@ class Api::V1::ProductsController < ApplicationController
 
   def update
     if @product.update(product_params)
-      render json: @product, status: :ok
+      render json: ProductBlueprint.render(@product, view: :extended), status: :ok
     else
       render json: { errors: @product.errors }, status: :unprocessable_entity
     end

@@ -56,3 +56,5 @@ gem "pry", "~> 0.14.2"
 gem "jwt", "~> 2.8"
 
 
+
+gem "blueprinter", "~> 1.0"
