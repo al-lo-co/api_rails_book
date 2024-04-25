@@ -4,7 +4,9 @@ class Api::V1::ProductsController < ApplicationController
   before_action :check_owner, only: %i[update destroy]
 
   def index
-    render json: Product.all, status: :ok
+    products = Product.search(params)
+
+    render json: ProductBlueprint.render(products), status: :ok
   end
 
   def show
