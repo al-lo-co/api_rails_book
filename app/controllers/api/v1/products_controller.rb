@@ -5,6 +5,8 @@ class Api::V1::ProductsController < ApplicationController
 
   def index
     products = Product.search(params)
+    #query = Product.ransack(params[:q])
+    #products = query.result(distinct: true)
 
     render json: ProductBlueprint.render(products), status: :ok
   end

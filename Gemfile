@@ -48,13 +48,12 @@ group :development do
   # gem "spring"
 end
 
-
 gem "bcrypt", "~> 3.1"
 
 gem "pry", "~> 0.14.2"
 
 gem "jwt", "~> 2.8"
 
-
-
 gem "blueprinter", "~> 1.0"
+
+gem "ransack", "~> 4.1" #searcher with form and sorter
