@@ -4,5 +4,6 @@ class OrderBlueprint < Blueprinter::Base
 
   view :extended do
     association :user, blueprint: UserBlueprint
+    association :products, blueprint: ProductBlueprint
   end
 end

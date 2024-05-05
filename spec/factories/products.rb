@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :product do
     title { Faker::FunnyName.name }
-    price { 1.1 }
+    price { Faker::Number.between(from: 1, to: 10) }
     user factory: :user
   end
 end
