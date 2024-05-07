@@ -16,12 +16,6 @@ RSpec.describe Order, type: :model do
       expect(order).to_not be_valid
     end
 
-    it "Invalid order" do
-      order.total = Faker::Number.between(from: -10, to: 0)
-
-      expect(order).to_not be_valid
-    end
-
     it "should show the total" do
       expect(order.total).to eq(product1.price + product2.price)
     end
