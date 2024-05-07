@@ -11,7 +11,8 @@ Placement.delete_all
     product = user.products.create!(
       title: Faker::Commerce.product_name,
       price: rand(1.0..100.0),
-      published: true
+      published: true,
+      quantity: 5
     )
     puts "created product #{ product.title }"
   end

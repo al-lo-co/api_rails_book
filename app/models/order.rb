@@ -11,4 +11,11 @@ class Order < ApplicationRecord
     self.total = Product.where(id: self.product_ids).sum(:price)
     #self.total = products.reload.sum(:price) sum method has changed for rails 7 in the eager loading data for intermediate tables so, this is not a solution
   end
+
+  def build_placements_with_product_ids_and_quantities(product_ids_and_quantities)
+    product_ids_and_quantities.each do |product_id_and_quantity|
+      placement = self.placements.build(product_id: product_id_and_quantity[:product_id])
+      yield placement if block_given?
+    end
+  end
 end

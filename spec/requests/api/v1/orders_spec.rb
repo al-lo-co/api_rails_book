@@ -13,7 +13,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
     end
 
     it "should show orders" do
-      get api_v1_orders_path, as: :json, headers: , as: :json
+      get api_v1_orders_path, headers: , as: :json
 
       expect(response).to have_http_status(:success)
       expect(response.parsed_body.size).to eq(order.user.orders.size)
@@ -33,7 +33,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
     end
 
     it "should show orders" do
-      get api_v1_order_path(id: order.id), as: :json, headers: , as: :json
+      get api_v1_order_path(id: order.id), headers: , as: :json
 
       expect(response).to have_http_status(:success)
       expect(response.parsed_body["total"].to_f).to eq(order.total)
@@ -44,7 +44,14 @@ RSpec.describe "Api::V1::Orders", type: :request do
   describe "POST /create" do
     let(:user) { create(:user) }
     let(:product) { create(:product, user_id: user.id) }
-    let(:params) { { order: { product_ids: [product.id], total: 50} } }
+    let(:product2) { create(:product, user_id: user.id) }
+    let(:product_ids_and_quantities) do
+      [
+        { product_id: product.id, quantity: 3 },
+        { product_id: product2.id, quantity: 2 }
+      ]
+    end
+    let(:params) { { order: { product_ids_and_quantities: } } }
     let(:headers) { { Authorization: JsonWebToken.encode(user_id: user.id) } }
 
     it "should forbid create order" do
@@ -53,7 +60,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it "should forbid create order" do
+    it "should permit create order" do
       post api_v1_orders_path, params: , headers: , as: :json
 
       expect(response.parsed_body["products"][0]["title"]).to eq(product.title)
