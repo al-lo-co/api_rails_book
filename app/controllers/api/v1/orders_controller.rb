@@ -1,8 +1,12 @@
 class Api::V1::OrdersController < ApplicationController
+  include Paginable
+
   before_action :check_login, only: %i[index show create]
 
   def index
-    render json: OrderBlueprint.render(current_user.orders, view: :extended)
+    orders = current_user.orders.page(params[:page]).per(params[:per_page])
+
+    render json: OrderBlueprint.render(orders, view: :extended)
   end
 
   def show

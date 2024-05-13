@@ -57,3 +57,5 @@ gem "jwt", "~> 2.8"
 gem "blueprinter", "~> 1.0"
 
 gem "ransack", "~> 4.1" #searcher with form and sorter
+
+gem "kaminari", "~> 1.2"
