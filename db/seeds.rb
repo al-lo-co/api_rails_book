@@ -12,16 +12,20 @@ Placement.delete_all
       title: Faker::Commerce.product_name,
       price: rand(1.0..100.0),
       published: true,
-      quantity: 5
+      quantity: Faker::Number.between(from: 5, to: 15)
     )
     puts "created product #{ product.title }"
   end
 
   2.times do
-    order = user.orders.create!(
-      total: rand(1.0..100.0),
-      products: user.products  
+    order = Order.create!(user_id: user.id)
+    order.build_placements_with_product_ids_and_quantities(
+      [
+        { product_id: rand(1..Order.all.size), quantity: 1 },
+        { product_id: rand(1..Order.all.size), quantity: 1 }
+      ]
     )
+    order.save!
     puts "created order #{ order.total }"
   end
 end

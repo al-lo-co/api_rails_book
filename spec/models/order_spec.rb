@@ -24,13 +24,25 @@ RSpec.describe Order, type: :model do
     end
 
     it "should show the total" do
-      expect(order.total).to eq(product1.price + product2.price)
+      order.placements = [ 
+        Placement.new(product_id: product1.id, quantity: 2),
+        Placement.new(product_id: product2.id, quantity: 2),
+       ]
+      order.set_total!
+
+      expect(order.total).to eq((product1.price * 2) + (product2.price * 2))
     end
 
     it "should build placements" do
       order2.build_placements_with_product_ids_and_quantities(product_ids_and_quantities)
 
       expect(order.placements.size).to eq(2) 
+    end
+
+    it "order should not claim too much product than available" do
+      order.placements << Placement.new(product_id: product1.id, quantity: (1 + product1.quantity))
+
+      expect(order).to_not be_valid
     end
   end
 end
