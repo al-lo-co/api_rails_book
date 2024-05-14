@@ -4,7 +4,10 @@ class Api::V1::OrdersController < ApplicationController
   before_action :check_login, only: %i[index show create]
 
   def index
-    orders = current_user.orders.page(params[:page]).per(params[:per_page])
+    orders = current_user.orders
+                          .includes(:products)
+                          .page(params[:page])
+                          .per(params[:per_page])
 
     render json: OrderBlueprint.render(orders, view: :extended)
   end
